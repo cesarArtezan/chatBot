@@ -58,7 +58,7 @@ public BookRouter = new  BookRouter();
 
     this.app.use('/', router);
     this.app.use('/api/v1/posts', this.postRouter.router);
-    this.app.use('/api/v2/users', this.userRouter.router);
+    this.app.use('/api/v1/users', this.userRouter.router);
     this.app.use('/api/v1/books', this.BookRouter.router);
   }
 }
