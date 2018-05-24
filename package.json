@@ -9,6 +9,7 @@
     "ts:watch": "tsc -w"
   },
   "dependencies": {
+    "actions-on-google": "^2.1.1",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "1.18.2",
     "compression": "1.7.1",

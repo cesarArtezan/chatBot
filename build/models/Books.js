@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var booksSchema = new mongoose_1.Schema({
+const mongoose_1 = require("mongoose");
+const booksSchema = new mongoose_1.Schema({
     createAt: {
         type: Date,
         default: Date.now

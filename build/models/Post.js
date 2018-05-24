@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
+const mongoose_1 = require("mongoose");
 // tslint:disable object-literal-sort-keys
-var PostSchema = new mongoose_1.Schema({
+const PostSchema = new mongoose_1.Schema({
     timestamp: {
         type: Date,
         default: Date.now

@@ -1,29 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var User_1 = require("../models/User");
-var UserRouter = /** @class */ (function () {
-    function UserRouter() {
+const express_1 = require("express");
+const User_1 = require("../models/User");
+class UserRouter {
+    constructor() {
         this.router = express_1.Router();
         this.routes();
     }
-    UserRouter.prototype.all = function (req, res) {
+    all(req, res) {
         User_1.default.find().populate('posts').populate('books')
-            .then(function (data) {
-            res.status(200).json({ data: data });
+            .then((data) => {
+            res.status(200).json({ data });
         })
-            .catch(function (error) {
-            res.status(500).json({ error: error });
+            .catch((error) => {
+            res.status(500).json({ error });
         });
-    };
-    UserRouter.prototype.one = function (req, res) {
-        var username = req.params.username;
-        User_1.default.findOne({ username: username }).populate('books posts')
-            .then(function (data) {
-            res.status(200).json({ data: data });
+    }
+    one(req, res) {
+        const username = req.params.username;
+        User_1.default.findOne({ username }).populate('books posts')
+            .then((data) => {
+            res.status(200).json({ data });
         })
-            .catch(function (error) {
-            res.status(500).json({ error: error });
+            .catch((error) => {
+            res.status(500).json({ error });
         });
         /*User.findOne({ username }).select('lastName')
           .then((data) => {
@@ -32,61 +32,60 @@ var UserRouter = /** @class */ (function () {
           .catch((error) => {
             res.status(500).json({ error });
           });*/
-    };
-    UserRouter.prototype.create = function (req, res) {
-        var firstName = req.body.firstName;
-        var lastName = req.body.lastName;
-        var username = req.body.username;
-        var email = req.body.email;
-        var password = req.body.password;
-        var posts = req.body.posts;
-        var books = req.body.books;
-        var user = new User_1.default({
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            email: email,
-            password: password,
-            posts: posts,
-            books: books
+    }
+    create(req, res) {
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const username = req.body.username;
+        const email = req.body.email;
+        const password = req.body.password;
+        const posts = req.body.posts;
+        const books = req.body.books;
+        const user = new User_1.default({
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
+            posts,
+            books
         });
         user.save()
-            .then(function (data) {
-            res.status(201).json({ data: data });
+            .then((data) => {
+            res.status(201).json({ data });
         })
-            .catch(function (error) {
-            res.status(500).json({ error: error });
+            .catch((error) => {
+            res.status(500).json({ error });
         });
-    };
-    UserRouter.prototype.update = function (req, res) {
-        var username = req.params.username;
-        User_1.default.findOneAndUpdate({ username: username }, req.body)
-            .then(function (data) {
-            res.status(200).json({ data: data });
+    }
+    update(req, res) {
+        const username = req.params.username;
+        User_1.default.findOneAndUpdate({ username }, req.body)
+            .then((data) => {
+            res.status(200).json({ data });
         })
-            .catch(function (error) {
-            res.status(500).json({ error: error });
+            .catch((error) => {
+            res.status(500).json({ error });
         });
-    };
-    UserRouter.prototype.delete = function (req, res) {
-        var username = req.params.username;
-        User_1.default.findOneAndRemove({ username: username })
-            .then(function () {
+    }
+    delete(req, res) {
+        const username = req.params.username;
+        User_1.default.findOneAndRemove({ username })
+            .then(() => {
             res.status(204).end();
         })
-            .catch(function (error) {
-            res.status(500).json({ error: error });
+            .catch((error) => {
+            res.status(500).json({ error });
         });
-    };
+    }
     // set up our routes
-    UserRouter.prototype.routes = function () {
+    routes() {
         this.router.get('/', this.all);
         this.router.get('/:username', this.one);
         this.router.post('/', this.create);
         this.router.put('/:username', this.update);
         this.router.delete('/:username', this.delete);
-    };
-    return UserRouter;
-}());
+    }
+}
 exports.UserRouter = UserRouter;
 //# sourceMappingURL=UserRouter.js.map
