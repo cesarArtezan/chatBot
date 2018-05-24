@@ -11,6 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Google Assistant deps
 const actions_on_google_1 = require("actions-on-google");
 const express_1 = require("express");
+const DialogResponse_1 = require("../models/DialogResponse");
 // aSSIST
 const app1 = actions_on_google_1.dialogflow({ debug: true });
 class DialogFlow {
@@ -60,11 +61,19 @@ class DialogFlow {
             speech: `El ultimo episodio fue este `
         });
     }
+    demo3(req, res) {
+        res.json(DialogResponse_1.ResponDialog);
+    }
+    demo4(req, res) {
+        res.json(DialogResponse_1.ResponDialog2);
+    }
     routes() {
-        this.router.get('/', this.all);
-        this.router.get('/demo', this.demo);
-        this.router.get('/demo1', this.demo1);
-        this.router.get('/demo2', this.demo2);
+        this.router.post('/', this.all);
+        this.router.post('/demo', this.demo);
+        this.router.post('/demo1', this.demo1);
+        this.router.post('/demo2', this.demo2);
+        this.router.post('/demo3', this.demo3);
+        this.router.post('/demo4', this.demo4);
     }
 }
 exports.DialogFlow = DialogFlow;

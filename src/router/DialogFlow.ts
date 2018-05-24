@@ -8,6 +8,7 @@ import {
 } from 'actions-on-google';
 import { IncomingMessage } from 'actions-on-google/dist/service/dialogflow/incoming';
 import { Request, Response, Router } from 'express';
+import { ResponDialog, ResponDialog2 } from '../models/DialogResponse';
 // aSSIST
 const app1 = dialogflow({ debug: true });
 
@@ -64,12 +65,23 @@ export class DialogFlow {
       text: `El ultimo episodio fue este`,
       speech: `El ultimo episodio fue este `
       });
+      
+  }
+  public demo3(req: Request, res: Response) {
+    res.json(ResponDialog);
+      
+  }
+  public demo4(req: Request, res: Response) {
+    res.json(ResponDialog2);
+      
   }
 
   public routes() {
-    this.router.get('/', this.all);
-    this.router.get('/demo', this.demo);
-    this.router.get('/demo1', this.demo1);
-    this.router.get('/demo2', this.demo2);
+    this.router.post('/', this.all);
+    this.router.post('/demo', this.demo);
+    this.router.post('/demo1', this.demo1);
+    this.router.post('/demo2', this.demo2);
+    this.router.post('/demo3', this.demo3);
+    this.router.post('/demo4', this.demo4);
   }
 }
