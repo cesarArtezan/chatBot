@@ -1,71 +1,59 @@
 // tslint:disable:quotemark
 export const ResponDialog = {
-  responseId: 'f0a90c6e-eedf-4a2a-986d-6e853f0753a7',
-  queryResult: {
-    queryText: 'prueba',
-    parameters: {
-      time: ''
-    },
-    allRequiredParamsPresent: true,
-    webhookPayload: {
-      google: {
-        userStorage: '{"data":{}}',
-        richResponse: {
-          items: [
-            {
-              simpleResponse: {
-                textToSpeech: 'El ultimo episodio fue este ',
-                displayText: 'El ultimo episodio fue este'
-              }
-            },
-            {
-              basicCard: {
-                image: {
-                  accessibilityText: 'AngularFirebase Logo',
-                  url: 'https://goo.gl/Fz9nrQ'
-                },
-                title: 'Watch the latest Episode',
-                buttons: [
-                  {
-                    title: 'Watch',
-                    openUrlAction: {
-                      url: 'https://angularfirebase.com/lessons'
-                    }
-                  }
-                ]
-              }
+  fulfillmentText: 'This is a text response',
+  fulfillmentMessages: [
+    {
+      card: {
+        title: 'card title',
+        subtitle: 'card text',
+        imageUri:
+          'https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png',
+        buttons: [
+          {
+            text: 'button text',
+            postback: 'https://assistant.google.com/'
+          }
+        ]
+      }
+    }
+  ],
+  source: 'example.com',
+  payload: {
+    google: {
+      expectUserResponse: true,
+      richResponse: {
+        items: [
+          {
+            simpleResponse: {
+              textToSpeech: 'this is a simple response'
             }
-          ]
-        },
-        expectUserResponse: true
+          }
+        ]
       }
     },
-    outputContexts: [
-      {
-        // tslint:disable-next-line:max-line-length
-        name:
-          'projects/cesarapp-14ad4/agent/sessions/a9d5037d-4ff4-475c-b439-b01d2bf31a68/contexts/_actions_on_google',
-        lifespanCount: 99,
-        parameters: {
-          data: '{}',
-          timeoriginal: '',
-          time: ''
-        }
-      }
-    ],
-    intent: {
-      name:
-        'projects/cesarapp-14ad4/agent/intents/f7c13fe3-4a5c-47de-ba0c-abce0c80f180',
-      displayName: 'prueba'
+    facebook: {
+      text: 'Hello, Facebook!'
     },
-    intentDetectionConfidence: 1,
-    diagnosticInfo: {
-      webhook_latency_ms: 64
-    },
-    languageCode: 'es'
+    slack: {
+      text: 'This is a text response for Slack.'
+    }
   },
-  webhookStatus: {
-    message: 'Webhook execution successful'
+  outputContexts: [
+    {
+      name:
+        'projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/context name',
+      lifespanCount: 5,
+      parameters: {
+        param: 'param value'
+      }
+    }
+  ],
+  followupEventInput: {
+    name: 'event name',
+    languageCode: 'en-US',
+    parameters: {
+      param: 'param value'
+    }
   }
 };
 
