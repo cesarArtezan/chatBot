@@ -53,7 +53,7 @@ export class DialogFlow {
       }
       const data1 = await allBooks();
       const list = ResponseItems;
-      list.payload.google.richResponse.items[1] = {
+      list.payload.google.richResponse.items[0] = {
         simpleResponse: {
           textToSpeech: "Libros",
           displayText: data1.toString()
