@@ -1,8 +1,7 @@
-import { Request, Response, Router } from 'express';
-import User from '../models/User';
+import { Request, Response, Router } from "express";
+import User from "../models/User";
 
 export class UserRouter {
-
   public router: Router;
 
   constructor() {
@@ -11,25 +10,26 @@ export class UserRouter {
   }
 
   public all(req: Request, res: Response): void {
-
-    User.find().populate('posts').populate('books')
-      .then((data) => {
+    User.find()
+      .populate("posts")
+      .populate("books")
+      .then(data => {
         res.status(200).json({ data });
       })
-      .catch((error) => {
+      .catch(error => {
         res.status(500).json({ error });
       });
-
   }
 
   public one(req: Request, res: Response): void {
     const username: string = req.params.username;
 
-    User.findOne({ username }).populate('books posts')
-      .then((data) => {
+    User.findOne({ username })
+      .populate("books posts")
+      .then(data => {
         res.status(200).json({ data });
       })
-      .catch((error) => {
+      .catch(error => {
         res.status(500).json({ error });
       });
 
@@ -61,27 +61,26 @@ export class UserRouter {
       books
     });
 
-    user.save()
-      .then((data) => {
+    user
+      .save()
+      .then(data => {
         res.status(201).json({ data });
       })
-      .catch((error) => {
+      .catch(error => {
         res.status(500).json({ error });
       });
-
   }
 
   public update(req: Request, res: Response): void {
     const username: string = req.params.username;
 
     User.findOneAndUpdate({ username }, req.body)
-      .then((data) => {
+      .then(data => {
         res.status(200).json({ data });
       })
-      .catch((error) => {
+      .catch(error => {
         res.status(500).json({ error });
       });
-
   }
 
   public delete(req: Request, res: Response): void {
@@ -91,19 +90,17 @@ export class UserRouter {
       .then(() => {
         res.status(204).end();
       })
-      .catch((error) => {
+      .catch(error => {
         res.status(500).json({ error });
       });
-
   }
 
   // set up our routes
   public routes() {
-    this.router.get('/', this.all);
-    this.router.get('/:username', this.one);
-    this.router.post('/', this.create);
-    this.router.put('/:username', this.update);
-    this.router.delete('/:username', this.delete);
+    this.router.get("/", this.all);
+    this.router.get("/:username", this.one);
+    this.router.post("/", this.create);
+    this.router.put("/:username", this.update);
+    this.router.delete("/:username", this.delete);
   }
-
 }

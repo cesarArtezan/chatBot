@@ -10,10 +10,10 @@ class PostRouter {
     // get all of the posts in the database
     all(req, res) {
         Post_1.default.find()
-            .then((data) => {
+            .then(data => {
             res.status(200).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.json({ error });
         });
     }
@@ -21,10 +21,10 @@ class PostRouter {
     one(req, res) {
         const slug = req.params.slug;
         Post_1.default.findOne({ slug })
-            .then((data) => {
+            .then(data => {
             res.status(200).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
@@ -37,7 +37,7 @@ class PostRouter {
         const category = req.body.category;
         const published = req.body.published;
         if (!title || !slug || !content) {
-            res.status(422).json({ message: 'All Fields Required.' });
+            res.status(422).json({ message: "All Fields Required." });
         }
         const post = new Post_1.default({
             title,
@@ -47,11 +47,12 @@ class PostRouter {
             category,
             published
         });
-        post.save()
-            .then((data) => {
+        post
+            .save()
+            .then(data => {
             res.status(201).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
@@ -59,10 +60,10 @@ class PostRouter {
     update(req, res) {
         const slug = req.body.slug;
         Post_1.default.findOneAndUpdate({ slug }, req.body)
-            .then((data) => {
+            .then(data => {
             res.status(200).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
@@ -73,16 +74,16 @@ class PostRouter {
             .then(() => {
             res.status(204).end();
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
     routes() {
-        this.router.get('/', this.all);
-        this.router.get('/:slug', this.one);
-        this.router.post('/', this.create);
-        this.router.put('/:slug', this.update);
-        this.router.delete('/:slug', this.delete);
+        this.router.get("/", this.all);
+        this.router.get("/:slug", this.one);
+        this.router.post("/", this.create);
+        this.router.put("/:slug", this.update);
+        this.router.delete("/:slug", this.delete);
     }
 }
 exports.PostRouter = PostRouter;
@@ -90,5 +91,5 @@ exports.PostRouter = PostRouter;
 const postRoutes = new PostRouter();
 postRoutes.routes();
 
-export default postRoutes.router;*/ 
+export default postRoutes.router;*/
 //# sourceMappingURL=PostRouter.js.map

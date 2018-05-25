@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = require("mongoose");
-const booksSchema = new mongoose_1.Schema({
+// import { model, Schema } from "mongoose";
+const mongoose = require("mongoose");
+const booksSchema = new mongoose.Schema({
     createAt: {
         type: Date,
         default: Date.now
     },
     name: {
         type: String,
-        default: '',
+        default: "",
         required: true,
         unique: true,
         lowercase: true
@@ -19,5 +20,5 @@ const booksSchema = new mongoose_1.Schema({
         required: false
     }
 });
-exports.default = mongoose_1.model('Books', booksSchema);
+exports.default = mongoose.model("Books", booksSchema);
 //# sourceMappingURL=Books.js.map

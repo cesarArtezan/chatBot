@@ -1,5 +1,13 @@
-import { model, Schema } from 'mongoose';
-
+import { model, Schema, Document } from "mongoose";
+interface IPost extends Document {
+  timestamp: Date;
+  title: string;
+  slug: any;
+  content: string;
+  featuredImage: string;
+  category: string;
+  published: boolean;
+}
 // tslint:disable object-literal-sort-keys
 const PostSchema: Schema = new Schema({
   timestamp: {
@@ -8,28 +16,28 @@ const PostSchema: Schema = new Schema({
   },
   title: {
     type: String,
-    default: '',
+    default: "",
     required: true
   },
   slug: {
     type: String,
-    default: '',
+    default: "",
     required: true,
     unique: true,
     trim: true
   },
   content: {
     type: String,
-    default: '',
+    default: "",
     required: true
   },
   featuredImage: {
     type: String,
-    default: ''
+    default: ""
   },
   category: {
     type: String,
-    default: ''
+    default: ""
   },
   published: {
     type: Boolean,
@@ -37,4 +45,4 @@ const PostSchema: Schema = new Schema({
   }
 });
 
-export default model('Post', PostSchema);
+export default model<IPost>("Post", PostSchema);

@@ -9,33 +9,33 @@ const PostSchema = new mongoose_1.Schema({
     },
     title: {
         type: String,
-        default: '',
+        default: "",
         required: true
     },
     slug: {
         type: String,
-        default: '',
+        default: "",
         required: true,
         unique: true,
         trim: true
     },
     content: {
         type: String,
-        default: '',
+        default: "",
         required: true
     },
     featuredImage: {
         type: String,
-        default: ''
+        default: ""
     },
     category: {
         type: String,
-        default: ''
+        default: ""
     },
     published: {
         type: Boolean,
         default: false
     }
 });
-exports.default = mongoose_1.model('Post', PostSchema);
+exports.default = mongoose_1.model("Post", PostSchema);
 //# sourceMappingURL=Post.js.map

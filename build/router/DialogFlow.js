@@ -8,72 +8,65 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// Google Assistant deps
-const actions_on_google_1 = require("actions-on-google");
+// tslint:disable:arrow-parens
 const express_1 = require("express");
+const Books_1 = require("../models/Books");
 const DialogResponse_1 = require("../models/DialogResponse");
-// aSSIST
-const app1 = actions_on_google_1.dialogflow({ debug: true });
 class DialogFlow {
     constructor() {
         this.router = express_1.Router();
         this.routes();
     }
-    all(req, res) {
-        // Capture Intent
-        app1.intent('prueba', (conv) => __awaiter(this, void 0, void 0, function* () {
-            // const data = await scrapePage();
-            conv.close(new actions_on_google_1.SimpleResponse({
-                text: `El ultimo episodio fue este`,
-                speech: `El ultimo episodio fue este `
-            }));
-            conv.ask(new actions_on_google_1.BasicCard({
-                title: 'Watch the latest Episode',
-                image: new actions_on_google_1.Image({
-                    url: 'https://goo.gl/Fz9nrQ',
-                    alt: 'AngularFirebase Logo'
-                }),
-                buttons: new actions_on_google_1.Button({
-                    title: 'Watch',
-                    url: 'https://angularfirebase.com/lessons'
-                })
-            }));
-        }));
-        res.json(app1);
-    }
-    demo(req, res) {
-        res.json({
-            speech: 'algo1',
-            displayText: 'algo2',
-            source: 'fuente'
+    intent(req, res) {
+        Books_1.default.find()
+            .then(data => {
+            res.status(200).json({ data });
+        })
+            .catch(error => {
+            res.status(500).json({ error });
         });
     }
-    demo1(req, res) {
-        return res.json({
-            speech: 'algo1',
-            displayText: 'algo2',
-            source: 'fuente'
+    getNember(req, res, next) {
+        const promise = new Promise((resolve, reject) => {
+            resolve(5);
         });
-    }
-    demo2(req, res) {
-        res.json({
-            text: `El ultimo episodio fue este`,
-            speech: `El ultimo episodio fue este `
-        });
-    }
-    demo3(req, res) {
-        res.json(DialogResponse_1.ResponDialog);
-    }
-    demo4(req, res) {
-        res.json(DialogResponse_1.ResponDialog2);
+        const result = promise;
+        req.algo = 5;
+        next();
     }
     routes() {
-        this.router.post('/', this.all);
-        this.router.post('/demo', this.demo);
-        this.router.post('/demo1', this.demo1);
-        this.router.post('/demo2', this.demo2);
-        this.router.post('/demo3', this.demo3);
-        this.router.post('/demo4', this.demo4);
+        this.router.post("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            // todos
+            function allBooks() {
+                return __awaiter(this, void 0, void 0, function* () {
+                    const promise = new Promise((resolve, reject) => {
+                        Books_1.default.find()
+                            .then(data => {
+                            const arrName = [];
+                            data.forEach((item, i) => {
+                                arrName[i] = item.name;
+                            });
+                            resolve(arrName);
+                        })
+                            .catch(error => {
+                            res.status(500).json({ error });
+                        });
+                    });
+                    const result = yield promise;
+                    return result;
+                });
+            }
+            const data1 = yield allBooks();
+            const list = DialogResponse_1.ResponseItems;
+            list.payload.google.richResponse.items.push({
+                simpleResponse: {
+                    textToSpeech: "Libros",
+                    displayText: data1.toString()
+                }
+            });
+            // respuesta final
+            res.status(200).json(list);
+        }));
     }
 }
 exports.DialogFlow = DialogFlow;

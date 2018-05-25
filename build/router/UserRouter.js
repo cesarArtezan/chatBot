@@ -8,21 +8,24 @@ class UserRouter {
         this.routes();
     }
     all(req, res) {
-        User_1.default.find().populate('posts').populate('books')
-            .then((data) => {
+        User_1.default.find()
+            .populate("posts")
+            .populate("books")
+            .then(data => {
             res.status(200).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
     one(req, res) {
         const username = req.params.username;
-        User_1.default.findOne({ username }).populate('books posts')
-            .then((data) => {
+        User_1.default.findOne({ username })
+            .populate("books posts")
+            .then(data => {
             res.status(200).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
         /*User.findOne({ username }).select('lastName')
@@ -50,21 +53,22 @@ class UserRouter {
             posts,
             books
         });
-        user.save()
-            .then((data) => {
+        user
+            .save()
+            .then(data => {
             res.status(201).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
     update(req, res) {
         const username = req.params.username;
         User_1.default.findOneAndUpdate({ username }, req.body)
-            .then((data) => {
+            .then(data => {
             res.status(200).json({ data });
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
@@ -74,17 +78,17 @@ class UserRouter {
             .then(() => {
             res.status(204).end();
         })
-            .catch((error) => {
+            .catch(error => {
             res.status(500).json({ error });
         });
     }
     // set up our routes
     routes() {
-        this.router.get('/', this.all);
-        this.router.get('/:username', this.one);
-        this.router.post('/', this.create);
-        this.router.put('/:username', this.update);
-        this.router.delete('/:username', this.delete);
+        this.router.get("/", this.all);
+        this.router.get("/:username", this.one);
+        this.router.post("/", this.create);
+        this.router.put("/:username", this.update);
+        this.router.delete("/:username", this.delete);
     }
 }
 exports.UserRouter = UserRouter;

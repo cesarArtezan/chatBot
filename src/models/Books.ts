@@ -1,21 +1,28 @@
-import { model, Schema } from 'mongoose';
+// import { model, Schema } from "mongoose";
+import * as mongoose from "mongoose";
 
-const booksSchema: Schema = new Schema({
-createAt: {
+const booksSchema: mongoose.Schema = new mongoose.Schema({
+  createAt: {
     type: Date,
     default: Date.now
-},
-name: {
+  },
+  name: {
     type: String,
-    default: '',
+    default: "",
     required: true,
     unique: true,
     lowercase: true
-},
-pages: {
+  },
+  pages: {
     type: Number,
     default: 0,
     required: false
-}
+  }
 });
-export default model('Books', booksSchema);
+export default mongoose.model<BooksInterface>("Books", booksSchema);
+
+export interface BooksInterface extends mongoose.Document {
+  createAt?: Date;
+  name?: string;
+  pages?: number;
+}
