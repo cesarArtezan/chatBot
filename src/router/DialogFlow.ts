@@ -44,32 +44,32 @@ export class DialogFlow {
   public routes() {
     this.router.post("/", async (req: Request, res: Response) => {
       // todos
-      // async function allBooks() {
-      //   const promise = new Promise((resolve, reject) => {
-      //     Books.find()
+      async function allBooks() {
+        const promise = new Promise((resolve, reject) => {
+          Books.find()
 
-      //       .then(data => {
-      //         const arrName: string[] = [];
-      //         data.forEach((item, i) => {
-      //           arrName[i] = item.name;
-      //         });
-      //         resolve(arrName);
-      //       })
-      //       .catch(error => {
-      //         res.status(500).json({ error });
-      //       });
-      //   });
-      //   const result = await promise;
-      //   return result;
-      // }
-      // const data1 = await allBooks();
-      // const list = ResponseItems;
-      // list.payload.google.richResponse.items[0] = {
-      //   simpleResponse: {
-      //     textToSpeech: "Libros",
-      //     displayText: data1.toString()
-      //   }
-      // };
+            .then(data => {
+              const arrName: string[] = [];
+              data.forEach((item, i) => {
+                arrName[i] = item.name;
+              });
+              resolve(arrName);
+            })
+            .catch(error => {
+              res.status(500).json({ error });
+            });
+        });
+        const result = await promise;
+        return result;
+      }
+      const data1 = await allBooks();
+      const list = ResponseItems;
+      list.payload.google.richResponse.items[0] = {
+        simpleResponse: {
+          textToSpeech: "Libros",
+          displayText: data1.toString()
+        }
+      };
       // const app1 = dialogflow({ debug: true });
       // app1.intent("prueba", async conv => {
       //   // const data = await scrapePage();
@@ -95,7 +95,9 @@ export class DialogFlow {
       // });
 
       // respuesta final
-      res.json(Simple);
+      const ya = Simple;
+      ya.payload.google.richResponse.items[0].simpleResponse.displayText = data1.toString();
+      res.json(ya);
     });
   }
 }

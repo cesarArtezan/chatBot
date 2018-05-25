@@ -8,10 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const DialogResponse_1 = require("./../models/DialogResponse");
 // tslint:disable:arrow-parens
 const express_1 = require("express");
 const Books_1 = require("../models/Books");
-const DialogResponse_1 = require("../models/DialogResponse");
+const DialogResponse_2 = require("../models/DialogResponse");
 class DialogFlow {
     constructor() {
         this.router = express_1.Router();
@@ -57,15 +58,40 @@ class DialogFlow {
                 });
             }
             const data1 = yield allBooks();
-            const list = DialogResponse_1.ResponseItems;
-            list.payload.google.richResponse.items.push({
+            const list = DialogResponse_2.ResponseItems;
+            list.payload.google.richResponse.items[0] = {
                 simpleResponse: {
                     textToSpeech: "Libros",
                     displayText: data1.toString()
                 }
-            });
+            };
+            // const app1 = dialogflow({ debug: true });
+            // app1.intent("prueba", async conv => {
+            //   // const data = await scrapePage();
+            //   conv.close(
+            //     new SimpleResponse({
+            //       text: `El ultimo episodio fue este`,
+            //       speech: `El ultimo episodio fue este `
+            //     })
+            //   );
+            //   // conv.ask(
+            //   //   new BasicCard({
+            //   //     title: 'Watch the latest Episode',
+            //   //     image: new Image({
+            //   //       url: 'https://goo.gl/Fz9nrQ',
+            //   //       alt: 'AngularFirebase Logo'
+            //   //     }),
+            //   //     buttons: new Button({
+            //   //       title: 'Watch',
+            //   //       url: 'https://angularfirebase.com/lessons'
+            //   //     })
+            //   //   })
+            //   // );
+            // });
             // respuesta final
-            res.status(200).json(list);
+            const ya = DialogResponse_1.Simple;
+            ya.payload.google.richResponse.items[0].simpleResponse.displayText = data1.toString();
+            res.json(ya);
         }));
     }
 }

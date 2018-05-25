@@ -127,7 +127,7 @@ export interface SystemIntent {
     listSelect: ListSelect;
   };
 }
-export const Simple = {
+export let Simple = {
   payload: {
     google: {
       expectUserResponse: false,
