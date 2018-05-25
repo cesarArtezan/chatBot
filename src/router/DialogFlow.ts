@@ -3,6 +3,17 @@ import { ItemsSimpleResponse, Simple } from "./../models/DialogResponse";
 import { Request, Response, Router } from "express";
 import Books, { BooksInterface } from "../models/Books";
 import { ResponseItems } from "../models/DialogResponse";
+// Google Assistant deps
+import {
+  dialogflow,
+  SimpleResponse,
+  BasicCard,
+  Button,
+  Image,
+  List,
+  Suggestions
+} from "actions-on-google";
+import { IncomingMessage } from "actions-on-google/dist/service/dialogflow/incoming";
 
 export class DialogFlow {
   public router: Router;
@@ -59,9 +70,32 @@ export class DialogFlow {
           displayText: data1.toString()
         }
       };
+      const app1 = dialogflow({ debug: true });
+      app1.intent("prueba", async conv => {
+        // const data = await scrapePage();
+        conv.close(
+          new SimpleResponse({
+            text: `El ultimo episodio fue este`,
+            speech: `El ultimo episodio fue este `
+          })
+        );
+        // conv.ask(
+        //   new BasicCard({
+        //     title: 'Watch the latest Episode',
+        //     image: new Image({
+        //       url: 'https://goo.gl/Fz9nrQ',
+        //       alt: 'AngularFirebase Logo'
+        //     }),
+        //     buttons: new Button({
+        //       title: 'Watch',
+        //       url: 'https://angularfirebase.com/lessons'
+        //     })
+        //   })
+        // );
+      });
 
       // respuesta final
-      res.status(200).json(Simple);
+      res.status(200).json(app1);
     });
   }
 }
