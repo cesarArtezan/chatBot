@@ -1,4 +1,4 @@
-import { ItemsSimpleResponse } from "./../models/DialogResponse";
+import { ItemsSimpleResponse, Simple } from "./../models/DialogResponse";
 // tslint:disable:arrow-parens
 import { Request, Response, Router } from "express";
 import Books, { BooksInterface } from "../models/Books";
@@ -61,7 +61,7 @@ export class DialogFlow {
       };
 
       // respuesta final
-      res.status(200).json(list);
+      res.status(200).json(Simple);
     });
   }
 }

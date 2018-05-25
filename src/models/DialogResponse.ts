@@ -14,10 +14,10 @@ export let ResponseItems = {
   outputContexts: [
     {
       name:
-        'projects/cesarapp-14ad4/agent/sessions/a9d5037d-4ff4-475c-b439-b01d2bf31a68/contexts/_actions_on_google',
+        "projects/cesarapp-14ad4/agent/sessions/a9d5037d-4ff4-475c-b439-b01d2bf31a68/contexts/_actions_on_google",
       lifespanCount: 99,
       parameters: {
-        data: '{}'
+        data: "{}"
       }
     }
   ]
@@ -35,10 +35,10 @@ export let ResponseSuggestion = {
   outputContexts: [
     {
       name:
-        'projects/cesarapp-14ad4/agent/sessions/a9d5037d-4ff4-475c-b439-b01d2bf31a68/contexts/_actions_on_google',
+        "projects/cesarapp-14ad4/agent/sessions/a9d5037d-4ff4-475c-b439-b01d2bf31a68/contexts/_actions_on_google",
       lifespanCount: 99,
       parameters: {
-        data: '{}'
+        data: "{}"
       }
     }
   ]
@@ -57,10 +57,10 @@ export let ResponseSuggestionItems = {
   outputContexts: [
     {
       name:
-        'projects/cesarapp-14ad4/agent/sessions/a9d5037d-4ff4-475c-b439-b01d2bf31a68/contexts/_actions_on_google',
+        "projects/cesarapp-14ad4/agent/sessions/a9d5037d-4ff4-475c-b439-b01d2bf31a68/contexts/_actions_on_google",
       lifespanCount: 99,
       parameters: {
-        data: '{}'
+        data: "{}"
       }
     }
   ]
@@ -121,9 +121,34 @@ export interface ListSelect {
   ];
 }
 export interface SystemIntent {
-  intent: 'actions.intent.OPTION';
+  intent: "actions.intent.OPTION";
   data?: {
-    '@type': 'type.googleapis.com/google.actions.v2.OptionValueSpec';
+    "@type": "type.googleapis.com/google.actions.v2.OptionValueSpec";
     listSelect: ListSelect;
   };
 }
+export const Simple = {
+  conversationToken: '["_actions_on_google"]',
+  finalResponse: {
+    richResponse: {
+      items: [
+        {
+          simpleResponse: {
+            textToSpeech: "El ultimo episodio fue este ",
+            displayText: "El ultimo episodio fue este"
+          }
+        }
+      ]
+    }
+  },
+  responseMetadata: {
+    status: {
+      message: "Success (200)"
+    },
+    queryMatchInfo: {
+      queryMatched: true,
+      intent: "f7c13fe3-4a5c-47de-ba0c-abce0c80f180"
+    }
+  },
+  userStorage: '{"data":{}}'
+};
