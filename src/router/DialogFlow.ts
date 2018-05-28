@@ -16,7 +16,11 @@ import {
 } from "actions-on-google";
 import { IncomingMessage } from "actions-on-google/dist/service/dialogflow/incoming";
 import * as express from "express";
-import { OptionItems } from "actions-on-google/dist/service/actionssdk";
+import {
+  OptionItems,
+  Table,
+  TableOptions
+} from "actions-on-google/dist/service/actionssdk";
 
 export class DialogFlow {
   public router: Router;
@@ -29,7 +33,7 @@ export class DialogFlow {
 
   public routes() {
     // Google
-    const app = dialogflow({ debug: true });
+    const app = dialogflow();
     // Register handlers for Dialogflow intents
     app.intent("Listar libros", async conv => {
       this.booksNames = await this.getAll();
@@ -55,22 +59,22 @@ export class DialogFlow {
         conv.ask("No se seleccionó nada");
       } else {
         const bookSelect = await this.getOne(option.toString());
-        this.booksNames.forEach(bookName => {
-          if (bookName === option) {
-            conv.ask("Este es la información de " + bookSelect.name);
-            conv.ask(
-              new BasicCard({
-                title: "Este es la información de " + bookSelect.name,
-                text: `**Paginas:**
+        // this.booksNames.forEach(bookName => {
+        //   if (bookName === option) {
+        conv.ask("Este es la información de " + bookSelect.name);
+        conv.ask(
+          new BasicCard({
+            title: "Este es la información de " + bookSelect.name,
+            text: `**Paginas:**
                   ${bookSelect.pages}  \n ***Fecha:*** ${bookSelect.createAt}`,
-                image: new Image({
-                  url: "http://theartezan.xyz/books.png",
-                  alt: "Image alternate text"
-                })
-              })
-            );
-          }
-        });
+            image: new Image({
+              url: "http://theartezan.xyz/books.png",
+              alt: "Image alternate text"
+            })
+          })
+        );
+        //   }
+        // });
       }
     });
     // list
@@ -143,6 +147,46 @@ export class DialogFlow {
       }
     });
 
+    // listar libros por paginas
+    app.intent("list-page-books", async (conv, params, option) => {
+      if (+params.number >= +params.number1) {
+        conv.ask("El primer numero debe de se el menor y el segundo el mayor");
+      } else {
+        const arrResult = await this.findByPages(
+          +params.number,
+          +params.number1
+        );
+        const tableOutput = [];
+        const listOutput: OptionItems = {};
+        arrResult.forEach(item => {
+          tableOutput.push([item.name, item.pages.toString()]);
+          listOutput[item.name] = {
+            title: item.name,
+            synonyms: [item.name],
+            description: "Paginas:" + item.pages.toString()
+          };
+        });
+
+        conv.ask(
+          `Se encontraron ${arrResult.length.toString()} libros en la base de datos`
+        );
+        conv.ask(
+          new Table({
+            dividers: false,
+            columns: ["Nombre", "Paginas"],
+            rows: tableOutput
+          })
+        );
+        // Create a list
+        conv.ask(
+          new List({
+            title: "Lista de Libros",
+            items: listOutput
+          })
+        );
+      }
+    });
+
     // Intent in Dialogflow called `Goodbye`
     app.intent("prueba2", conv => {
       conv.close("See you later!");
@@ -154,6 +198,7 @@ export class DialogFlow {
 
     this.router.use("/", app);
   }
+  // -------- helpers
   public async getAll() {
     const promise = new Promise<string[]>((resolve, reject) => {
       Books.find()
@@ -174,6 +219,23 @@ export class DialogFlow {
   public async getOne(name: string) {
     const promise = new Promise<BooksInterface>((resolve, reject) => {
       Books.findOne({ name })
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          // error
+        });
+    });
+    const result = await promise;
+    return result;
+  }
+  public async findByPages(greaterThan: number, lessThan: number) {
+    const promise = new Promise<BooksInterface[]>((resolve, reject) => {
+      Books.find()
+        .where("pages")
+        .gt(greaterThan)
+        .lt(lessThan)
+        .sort("-pages")
         .then(data => {
           resolve(data);
         })

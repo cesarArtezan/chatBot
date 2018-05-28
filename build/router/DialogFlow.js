@@ -13,6 +13,7 @@ const express_1 = require("express");
 const Books_1 = require("../models/Books");
 // Google Assistant deps
 const actions_on_google_1 = require("actions-on-google");
+const actionssdk_1 = require("actions-on-google/dist/service/actionssdk");
 class DialogFlow {
     constructor() {
         this.router = express_1.Router();
@@ -20,7 +21,7 @@ class DialogFlow {
     }
     routes() {
         // Google
-        const app = actions_on_google_1.dialogflow({ debug: true });
+        const app = actions_on_google_1.dialogflow();
         // Register handlers for Dialogflow intents
         app.intent("Listar libros", (conv) => __awaiter(this, void 0, void 0, function* () {
             this.booksNames = yield this.getAll();
@@ -45,20 +46,20 @@ class DialogFlow {
             }
             else {
                 const bookSelect = yield this.getOne(option.toString());
-                this.booksNames.forEach(bookName => {
-                    if (bookName === option) {
-                        conv.ask("Este es la información de " + bookSelect.name);
-                        conv.ask(new actions_on_google_1.BasicCard({
-                            title: "Este es la información de " + bookSelect.name,
-                            text: `**Paginas:**
+                // this.booksNames.forEach(bookName => {
+                //   if (bookName === option) {
+                conv.ask("Este es la información de " + bookSelect.name);
+                conv.ask(new actions_on_google_1.BasicCard({
+                    title: "Este es la información de " + bookSelect.name,
+                    text: `**Paginas:**
                   ${bookSelect.pages}  \n ***Fecha:*** ${bookSelect.createAt}`,
-                            image: new actions_on_google_1.Image({
-                                url: "http://theartezan.xyz/books.png",
-                                alt: "Image alternate text"
-                            })
-                        }));
-                    }
-                });
+                    image: new actions_on_google_1.Image({
+                        url: "http://theartezan.xyz/books.png",
+                        alt: "Image alternate text"
+                    })
+                }));
+                //   }
+                // });
             }
         }));
         // list
@@ -128,6 +129,36 @@ class DialogFlow {
                 conv.ask("You selected an unknown item from the list, or carousel");
             }
         });
+        // listar libros por paginas
+        app.intent("list-page-books", (conv, params, option) => __awaiter(this, void 0, void 0, function* () {
+            if (+params.number >= +params.number1) {
+                conv.ask("El primer numero debe de se el menor y el segundo el mayor");
+            }
+            else {
+                const arrResult = yield this.findByPages(+params.number, +params.number1);
+                const tableOutput = [];
+                const listOutput = {};
+                arrResult.forEach(item => {
+                    tableOutput.push([item.name, item.pages.toString()]);
+                    listOutput[item.name] = {
+                        title: item.name,
+                        synonyms: [item.name],
+                        description: "Paginas:" + item.pages.toString()
+                    };
+                });
+                conv.ask(`Se encontraron ${arrResult.length.toString()} libros en la base de datos`);
+                conv.ask(new actionssdk_1.Table({
+                    dividers: false,
+                    columns: ["Nombre", "Paginas"],
+                    rows: tableOutput
+                }));
+                // Create a list
+                conv.ask(new actions_on_google_1.List({
+                    title: "Lista de Libros",
+                    items: listOutput
+                }));
+            }
+        }));
         // Intent in Dialogflow called `Goodbye`
         app.intent("prueba2", conv => {
             conv.close("See you later!");
@@ -137,6 +168,7 @@ class DialogFlow {
         });
         this.router.use("/", app);
     }
+    // -------- helpers
     getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             const promise = new Promise((resolve, reject) => {
@@ -160,6 +192,25 @@ class DialogFlow {
         return __awaiter(this, void 0, void 0, function* () {
             const promise = new Promise((resolve, reject) => {
                 Books_1.default.findOne({ name })
+                    .then(data => {
+                    resolve(data);
+                })
+                    .catch(error => {
+                    // error
+                });
+            });
+            const result = yield promise;
+            return result;
+        });
+    }
+    findByPages(greaterThan, lessThan) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const promise = new Promise((resolve, reject) => {
+                Books_1.default.find()
+                    .where("pages")
+                    .gt(greaterThan)
+                    .lt(lessThan)
+                    .sort("-pages")
                     .then(data => {
                     resolve(data);
                 })
