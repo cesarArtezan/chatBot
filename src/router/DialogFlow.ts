@@ -25,6 +25,9 @@ import {
 export class DialogFlow {
   public router: Router;
   booksNames: string[];
+  isName: boolean;
+  nameBook: string;
+  pagesBook: number;
 
   constructor() {
     this.router = Router();
@@ -156,46 +159,97 @@ export class DialogFlow {
           +params.number,
           +params.number1
         );
-        const tableOutput = [];
-        const listOutput: OptionItems = {};
-        arrResult.forEach(item => {
-          tableOutput.push([item.name, item.pages.toString()]);
-          listOutput[item.name] = {
-            title: item.name,
-            synonyms: [item.name],
-            description: "Paginas:" + item.pages.toString()
-          };
-        });
+        if (arrResult.length === 0) {
+          conv.ask("No se encontraron libros en ese rango, intenta con otro");
+        } else if (arrResult.length > 1) {
+          const tableOutput = [];
+          const listOutput: OptionItems = {};
+          arrResult.forEach(item => {
+            tableOutput.push([item.name, item.pages.toString()]);
+            listOutput[item.name] = {
+              title: item.name,
+              synonyms: [item.name],
+              description: "Paginas:" + item.pages.toString()
+            };
+          });
 
-        conv.ask(
-          `Se encontraron ${arrResult.length.toString()} libros en la base de datos`
-        );
-        conv.ask(
-          new Table({
-            dividers: false,
-            columns: ["Nombre", "Paginas"],
-            rows: tableOutput
-          })
-        );
-        // Create a list
-        conv.ask(
-          new List({
-            title: "Lista de Libros",
-            items: listOutput
-          })
-        );
+          conv.ask(
+            `Se encontraron ${arrResult.length.toString()} libros en la base de datos`
+          );
+          // conv.ask(
+          //   new Table({
+          //     dividers: false,
+          //     columns: ["Nombre", "Paginas"],
+          //     rows: tableOutput
+          //   })
+          // );
+          // Create a list
+          conv.ask(
+            new List({
+              title: "Lista de Libros",
+              items: listOutput
+            })
+          );
+        } else if (arrResult.length === 1) {
+          conv.ask("Solo se encontró un libro");
+          conv.ask(
+            new BasicCard({
+              title: "Este es la información de " + arrResult[0].name,
+              text: `**Paginas:**
+                    ${arrResult[0].pages}  \n ***Fecha:*** ${
+                arrResult[0].createAt
+              }`,
+              image: new Image({
+                url: "http://theartezan.xyz/books.png",
+                alt: "Image alternate text"
+              })
+            })
+          );
+        }
+      }
+    });
+    // new Book
+    app.intent("new-book", async conv => {
+      this.isName = true;
+      this.nameBook = undefined;
+      conv.ask("Ok. ¿Cuál es el nombre del libro?");
+    });
+    app.intent("new-book-name", async (conv, params) => {
+      if (this.isName) {
+        this.nameBook = params.nameBook.toString();
+        this.isName = false;
+        conv.ask("Ok. ¿Cúantas páginas tiene el libro?");
+      }
+    });
+    app.intent("new-book-pages", async (conv, params) => {
+      if (!this.isName) {
+        this.pagesBook = +params.pagesBook;
+        conv.ask("Libro creado correctamente");
+        // Create book
+        const isCreate = await this.newBook();
+        if (isCreate) {
+          this.booksNames = await this.getAll();
+          const bookList: OptionItems = {};
+          this.booksNames.forEach(book => {
+            bookList[book] = {
+              title: book,
+              synonyms: [book],
+              description: "Este es el " + book
+            };
+          });
+          // Create a list
+          conv.ask(
+            new List({
+              title: "Lista de Libros",
+              items: bookList
+            })
+          );
+        } else {
+        }
       }
     });
 
-    // Intent in Dialogflow called `Goodbye`
-    app.intent("prueba2", conv => {
-      conv.close("See you later!");
-    });
-
-    app.intent("Default Fallback Intent", conv => {
-      conv.ask(`I didn't understand. Can you tell me something else?`);
-    });
-
+    // exporta app
     this.router.use("/", app);
   }
   // -------- helpers
@@ -238,6 +292,26 @@ export class DialogFlow {
         .sort("-pages")
         .then(data => {
           resolve(data);
+        })
+        .catch(error => {
+          // error
+        });
+    });
+    const result = await promise;
+    return result;
+  }
+  public async newBook() {
+    const name: string = this.nameBook;
+    const pages: number = this.pagesBook;
+    const book = new Books({
+      name,
+      pages
+    });
+    const promise = new Promise<boolean>((resolve, reject) => {
+      book
+        .save()
+        .then(data => {
+          resolve(true);
         })
         .catch(error => {
           // error

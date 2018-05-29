@@ -13,7 +13,6 @@ const express_1 = require("express");
 const Books_1 = require("../models/Books");
 // Google Assistant deps
 const actions_on_google_1 = require("actions-on-google");
-const actionssdk_1 = require("actions-on-google/dist/service/actionssdk");
 class DialogFlow {
     constructor() {
         this.router = express_1.Router();
@@ -136,36 +135,88 @@ class DialogFlow {
             }
             else {
                 const arrResult = yield this.findByPages(+params.number, +params.number1);
-                const tableOutput = [];
-                const listOutput = {};
-                arrResult.forEach(item => {
-                    tableOutput.push([item.name, item.pages.toString()]);
-                    listOutput[item.name] = {
-                        title: item.name,
-                        synonyms: [item.name],
-                        description: "Paginas:" + item.pages.toString()
-                    };
-                });
-                conv.ask(`Se encontraron ${arrResult.length.toString()} libros en la base de datos`);
-                conv.ask(new actionssdk_1.Table({
-                    dividers: false,
-                    columns: ["Nombre", "Paginas"],
-                    rows: tableOutput
-                }));
-                // Create a list
-                conv.ask(new actions_on_google_1.List({
-                    title: "Lista de Libros",
-                    items: listOutput
-                }));
+                if (arrResult.length === 0) {
+                    conv.ask("No se encontraron libros en ese rango, intenta con otro");
+                }
+                else if (arrResult.length > 1) {
+                    const tableOutput = [];
+                    const listOutput = {};
+                    arrResult.forEach(item => {
+                        tableOutput.push([item.name, item.pages.toString()]);
+                        listOutput[item.name] = {
+                            title: item.name,
+                            synonyms: [item.name],
+                            description: "Paginas:" + item.pages.toString()
+                        };
+                    });
+                    conv.ask(`Se encontraron ${arrResult.length.toString()} libros en la base de datos`);
+                    // conv.ask(
+                    //   new Table({
+                    //     dividers: false,
+                    //     columns: ["Nombre", "Paginas"],
+                    //     rows: tableOutput
+                    //   })
+                    // );
+                    // Create a list
+                    conv.ask(new actions_on_google_1.List({
+                        title: "Lista de Libros",
+                        items: listOutput
+                    }));
+                }
+                else if (arrResult.length === 1) {
+                    conv.ask("Solo se encontró un libro");
+                    conv.ask(new actions_on_google_1.BasicCard({
+                        title: "Este es la información de " + arrResult[0].name,
+                        text: `**Paginas:**
+                    ${arrResult[0].pages}  \n ***Fecha:*** ${arrResult[0].createAt}`,
+                        image: new actions_on_google_1.Image({
+                            url: "http://theartezan.xyz/books.png",
+                            alt: "Image alternate text"
+                        })
+                    }));
+                }
             }
         }));
-        // Intent in Dialogflow called `Goodbye`
-        app.intent("prueba2", conv => {
-            conv.close("See you later!");
-        });
-        app.intent("Default Fallback Intent", conv => {
-            conv.ask(`I didn't understand. Can you tell me something else?`);
-        });
+        // new Book
+        app.intent("new-book", (conv) => __awaiter(this, void 0, void 0, function* () {
+            this.isName = true;
+            this.nameBook = undefined;
+            conv.ask("Ok. ¿Cuál es el nombre del libro?");
+        }));
+        app.intent("new-book-name", (conv, params) => __awaiter(this, void 0, void 0, function* () {
+            if (this.isName) {
+                this.nameBook = params.nameBook.toString();
+                this.isName = false;
+                conv.ask("Ok. ¿Cúantas páginas tiene el libro?");
+            }
+        }));
+        app.intent("new-book-pages", (conv, params) => __awaiter(this, void 0, void 0, function* () {
+            if (!this.isName) {
+                this.pagesBook = +params.pagesBook;
+                conv.ask("Libro creado correctamente");
+                // Create book
+                const isCreate = yield this.newBook();
+                if (isCreate) {
+                    this.booksNames = yield this.getAll();
+                    const bookList = {};
+                    this.booksNames.forEach(book => {
+                        bookList[book] = {
+                            title: book,
+                            synonyms: [book],
+                            description: "Este es el " + book
+                        };
+                    });
+                    // Create a list
+                    conv.ask(new actions_on_google_1.List({
+                        title: "Lista de Libros",
+                        items: bookList
+                    }));
+                }
+                else {
+                }
+            }
+        }));
+        // exporta app
         this.router.use("/", app);
     }
     // -------- helpers
@@ -213,6 +264,28 @@ class DialogFlow {
                     .sort("-pages")
                     .then(data => {
                     resolve(data);
+                })
+                    .catch(error => {
+                    // error
+                });
+            });
+            const result = yield promise;
+            return result;
+        });
+    }
+    newBook() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = this.nameBook;
+            const pages = this.pagesBook;
+            const book = new Books_1.default({
+                name,
+                pages
+            });
+            const promise = new Promise((resolve, reject) => {
+                book
+                    .save()
+                    .then(data => {
+                    resolve(true);
                 })
                     .catch(error => {
                     // error
