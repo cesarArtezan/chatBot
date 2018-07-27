@@ -13,39 +13,39 @@ const UserSchema = new mongoose_1.Schema({
     },
     firstName: {
         type: String,
-        default: '',
+        default: "",
         required: true
     },
     lastName: {
         type: String,
-        default: '',
+        default: "",
         required: true
     },
     username: {
         type: String,
-        default: '',
+        default: "",
         required: true,
         unique: true,
         lowercase: true
     },
     email: {
         type: String,
-        default: '',
+        default: "",
         required: true
     },
     password: {
         type: String,
-        default: '',
+        default: "",
         required: true
     },
     posts: [{
             type: mongoose_1.Schema.Types.ObjectId,
-            ref: 'Post'
+            ref: "Post"
         }],
     books: [{
             type: mongoose_1.Schema.Types.ObjectId,
-            ref: 'Books'
+            ref: "Books"
         }]
 });
-exports.default = mongoose_1.model('User', UserSchema);
+exports.default = mongoose_1.model("User", UserSchema);
 //# sourceMappingURL=User.js.map

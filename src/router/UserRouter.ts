@@ -1,6 +1,18 @@
 import { Request, Response, Router } from "express";
 import User from "../models/User";
-
+/**
+ * @apiDefine UserResponsePArams
+ * @apiSuccess {Date} createdAt
+ * @apiSuccess {Date} [updatedAt]
+ * @apiSuccess {ObjectId} _id
+ * @apiSuccess {string} firstName
+ * @apiSuccess {string} lastName
+ * @apiSuccess {string} username
+ * @apiSuccess {string} email
+ * @apiSuccess {string} password
+ * @apiSuccess {Books} books
+ * @apiSuccess {Post} post
+ */
 export class UserRouter {
   public router: Router;
 
@@ -8,7 +20,18 @@ export class UserRouter {
     this.router = Router();
     this.routes();
   }
-
+  /**
+   * @api {GET} /users/ Request all
+   * @apiVersion  0.1.0
+   * @apiName get
+   * @apiGroup Users
+   *
+   *
+   * @apiSampleRequest /users/
+   *
+   * @apiSuccessExample {json} Success-Response a JSON-Array<user>:
+   * {"data":[{"createdAt":"2018-07-27T15:13:59.451Z","updatedAt":"2018-07-27T15:13:59.451Z","firstName":"Cesar","lastName":"Artezan","username":"cesarartezan","email":"algo@a.com","password":"123","posts":[],"books":[],"_id":"5abc0051734d1d56e2046bd6"},{"createdAt":"2018-04-15T21:46:50.337Z","updatedAt":"2018-04-15T21:46:50.337Z","firstName":"user2","lastName":"lastname2","username":"username1","email":"algo@a.com","password":"5636","posts":[],"books":[],"_id":"5ad3c84afddb2b2cc4ffbb0f","__v":0}]}
+   */
   public all(req: Request, res: Response): void {
     User.find()
       .populate("posts")

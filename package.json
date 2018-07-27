@@ -4,12 +4,26 @@
   "main": "./build/index.js",
   "license": "MIT",
   "scripts": {
-    "server": "tsc && nodemon ./build/index.js",
-    "start": "tsc && nodemon ./build/index.js",
-    "ts:watch": "tsc -w"
+    "server": "node ./build/app.js",
+    "start": "tsc && nodemon ./build/app.js",
+    "ts:watch": "tsc -w",
+    "build-doc": "apidoc -i src/ --silent"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "doc/*"
+    ]
+  },
+  "apidoc": {
+    "name": "cesar-users-api",
+    "version": "0.1.0",
+    "description": "Documentation for DemoApp",
+    "url": "https://cesarapp12.herokuapp.com/api/v1",
+    "sampleUrl": "https://cesarapp12.herokuapp.com/api/v1"
   },
   "dependencies": {
     "actions-on-google": "^2.1.1",
+    "apidoc": "^0.17.6",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "1.18.2",
     "compression": "1.7.1",

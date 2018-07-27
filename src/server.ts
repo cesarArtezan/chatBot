@@ -41,6 +41,7 @@ class Server {
     this.app.use(compression());
     this.app.use(helmet());
     this.app.use(cors());
+    this.app.use(express.static("doc"));
 
     // cors
     this.app.use((req, res, next) => {
