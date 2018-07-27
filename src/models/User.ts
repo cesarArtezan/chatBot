@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema } from "mongoose";
 
 // tslint:disable object-literal-sort-keys
 const UserSchema: Schema = new Schema({
@@ -12,39 +12,39 @@ const UserSchema: Schema = new Schema({
   },
   firstName: {
     type: String,
-    default: '',
+    default: "",
     required: true
   },
   lastName: {
     type: String,
-    default: '',
+    default: "",
     required: true
   },
   username: {
     type: String,
-    default: '',
+    default: "",
     required: true,
     unique: true,
     lowercase: true
   },
   email: {
     type: String,
-    default: '',
+    default: "",
     required: true
   },
   password: {
     type: String,
-    default: '',
+    default: "",
     required: true
   },
   posts: [{
     type: Schema.Types.ObjectId,
-    ref: 'Post'
+    ref: "Post"
   }],
   books: [{
     type: Schema.Types.ObjectId,
-    ref: 'Books'
+    ref: "Books"
   }]
 });
 
-export default model('User', UserSchema);
+export default model("User", UserSchema);
