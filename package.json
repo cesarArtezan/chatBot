@@ -22,7 +22,7 @@
     "sampleUrl": "https://cesarapp12.herokuapp.com/api/v1"
   },
   "dependencies": {
-    "actions-on-google": "^2.1.1",
+    "actions-on-google": "2.4.1",
     "apidoc": "^0.17.6",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "1.18.2",
@@ -34,7 +34,8 @@
     "helmet": "3.9.0",
     "lodash": "4.17.4",
     "mongoose": "5.0.0-rc1",
-    "morgan": "1.9.0"
+    "morgan": "1.9.0",
+    "request": "^2.88.0"
   },
   "devDependencies": {
     "@types/body-parser": "1.16.8",

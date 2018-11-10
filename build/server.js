@@ -12,12 +12,14 @@ const BookRouter_1 = require("./router/BookRouter");
 const DialogFlow_1 = require("./router/DialogFlow");
 const PostRouter_1 = require("./router/PostRouter");
 const UserRouter_1 = require("./router/UserRouter");
+const Facebook_1 = require("./router/Facebook");
 class Server {
     constructor() {
         this.postRouter = new PostRouter_1.PostRouter();
         this.userRouter = new UserRouter_1.UserRouter();
         this.BookRouter = new BookRouter_1.BookRouter();
         this.dialogRouter = new DialogFlow_1.DialogFlow();
+        this.facebookRouter = new Facebook_1.FacebookRouter();
         this.app = express();
         this.config();
         this.routes();
@@ -56,6 +58,7 @@ class Server {
         this.app.use("/api/v1/users", this.userRouter.router);
         this.app.use("/api/v1/books", this.BookRouter.router);
         this.app.use("/api/v1/dialog", this.dialogRouter.router);
+        this.app.use("/api/v1/facebook", this.facebookRouter.router);
     }
 }
 // export

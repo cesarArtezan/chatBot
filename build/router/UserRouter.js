@@ -57,7 +57,7 @@ class UserRouter {
      * @apiExample Example usage:
      * https://cesarapp12.herokuapp.com/api/v1/users/5a9c4bb05e46d22f64abc15a
      *
-     * @apiSampleRequest /user/
+     * @apiSampleRequest /users/
      *
      * @apiUse UserResponseParams
      *

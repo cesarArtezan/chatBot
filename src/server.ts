@@ -11,12 +11,14 @@ import { BookRouter } from "./router/BookRouter";
 import { DialogFlow } from "./router/DialogFlow";
 import { PostRouter } from "./router/PostRouter";
 import { UserRouter } from "./router/UserRouter";
+import { FacebookRouter } from "./router/Facebook";
 
 class Server {
   public postRouter = new PostRouter();
   public userRouter = new UserRouter();
   public BookRouter = new BookRouter();
   public dialogRouter = new DialogFlow();
+  public facebookRouter = new FacebookRouter();
 
   // set app to be of type express.Application
   public app: express.Application;
@@ -72,6 +74,7 @@ class Server {
     this.app.use("/api/v1/users", this.userRouter.router);
     this.app.use("/api/v1/books", this.BookRouter.router);
     this.app.use("/api/v1/dialog", this.dialogRouter.router);
+    this.app.use("/api/v1/facebook", this.facebookRouter.router);
   }
 }
 

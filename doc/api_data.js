@@ -144,7 +144,7 @@ define({ "api": [
     ],
     "sampleRequest": [
       {
-        "url": "https://cesarapp12.herokuapp.com/api/v1/user/"
+        "url": "https://cesarapp12.herokuapp.com/api/v1/users/"
       }
     ],
     "success": {
