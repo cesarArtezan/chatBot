@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import { DialogflowRequest } from "../models/requestDialow.model";
 import { DialogRespond } from "../models/RespondMessages.model";
+import * as fetch from "node-fetch";
 
-const req = require("request");
 
 export class FacebookRouter {
     public router: Router;
@@ -11,14 +11,15 @@ export class FacebookRouter {
         this.routes();
     }
     public routes() {
-        this.router.use("/", (request, response) => {
-            console.log("Dialogflow Request body: " + JSON.stringify(request.body));
+        this.router.use("/", async (request, response) => {
+            // console.log("Dialogflow Request body: " + JSON.stringify(request.body));
 
             const dialoflowRequest: DialogflowRequest = request.body;
             const intents = dialoflowRequest.queryResult.intent.displayName;
             const res: DialogRespond = {};
+            const { number, number1, any } = dialoflowRequest.queryResult.parameters;
             if (intents === "suma") {
-                const { number, number1 } = dialoflowRequest.queryResult.parameters;
+                const { number, number1, any } = dialoflowRequest.queryResult.parameters;
                 const sum = number + number1;
                 res.fulfillmentText = `La suma de ${number} ➕ ${number1} es ${sum} ✔️`;
             }
@@ -42,6 +43,31 @@ export class FacebookRouter {
                         }
                     }
                 ];
+            }
+            if (intents === "intro") {
+                res.fulfillmentMessages = [
+                    {
+                        platform: "FACEBOOK",
+                        quick_replies: {
+                            title: `Escribe o selecciona uno:`,
+                            quickReplies: [
+                                `Sumar 1 + 2`,
+                                `Vleeko`,
+                                `Clima en Puebla`,
+                                `Hola Bot`
+                            ]
+                        }
+
+                    }
+                ];
+            }
+            if (intents === "clima") {
+                const city = any;
+
+                const json = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=2cee9d8a348946cebf86fd1c2ff55813`)
+                    .then(res => res.json());
+                console.log(json.main.temp);
+                res.fulfillmentText = `En ${city} esta a ${json.main.temp} ℃ 🌡️ con ${json.main.humidity}% de humedad 🌞`;
             }
 
             response.json(res);

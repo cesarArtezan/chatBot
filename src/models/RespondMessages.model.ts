@@ -6,7 +6,8 @@ export interface DialogRespond {
 
 interface FulfillmentMessage {
     platform: string;
-    card: Card;
+    card?: Card;
+    quick_replies?: QuickReplies;
 }
 
 interface Card {
@@ -19,4 +20,8 @@ interface Card {
 interface Button {
     text: string;
     postback: string;
+}
+interface QuickReplies {
+    title: string;
+    quickReplies: string[];
 }

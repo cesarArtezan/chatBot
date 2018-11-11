@@ -70,6 +70,7 @@ interface Text {
 }
 
 interface Parameters {
-  number: number;
-  number1: number;
+  number?: number;
+  number1?: number;
+  any?: any;
 }
